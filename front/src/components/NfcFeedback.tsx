@@ -1,50 +1,70 @@
 "use client";
 
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
-import { LogIn, LogOut, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CheckCircle, XCircle, Clock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export default function Header() {
-  const { user, logout } = useAuth();
+interface NfcFeedbackProps {
+  isVisible: boolean;
+  type: "success" | "error" | "processing";
+  message: string;
+  onClose: () => void;
+}
+
+export default function NfcFeedback({
+  isVisible,
+  type,
+  message,
+  onClose,
+}: NfcFeedbackProps) {
+  const [shouldRender, setShouldRender] = useState(false);
+
+  useEffect(() => {
+    if (isVisible) {
+      setShouldRender(true);
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    } else {
+      const timer = setTimeout(() => setShouldRender(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
+
+  if (!shouldRender) return null;
+
+  const icons = {
+    success: <CheckCircle className="w-8 h-8 text-green-500" />,
+    error: <XCircle className="w-8 h-8 text-red-500" />,
+    processing: <Clock className="w-8 h-8 text-blue-500 animate-spin" />,
+  };
+
+  const bgColors = {
+    success: "bg-green-50 border-green-200",
+    error: "bg-red-50 border-red-200",
+    processing: "bg-blue-50 border-blue-200",
+  };
 
   return (
-    <header className="border-b bg-white shadow-sm">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">NFC</span>
-          </div>
-          <span className="text-xl font-bold text-gray-900">
-            근태관리 시스템
-          </span>
-        </Link>
-
-        <nav className="flex items-center space-x-4">
-          {user ? (
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <User className="w-4 h-4" />
-                <span className="text-sm font-medium">{user.name}</span>
-                <span className="text-xs text-gray-500">
-                  ({user.role === "admin" ? "관리자" : "직원"})
-                </span>
-              </div>
-              <Button variant="outline" size="sm" onClick={logout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                로그아웃
-              </Button>
-            </div>
-          ) : (
-            <Button asChild>
-              <Link to="/login">
-                <LogIn className="w-4 h-4 mr-2" />
-                로그인
-              </Link>
-            </Button>
-          )}
-        </nav>
+    <div
+      className={cn(
+        "fixed inset-0 z-50 flex items-center justify-center bg-black/20",
+        isVisible ? "animate-in fade-in-0" : "animate-out fade-out-0"
+      )}
+    >
+      <div
+        className={cn(
+          "mx-4 p-6 rounded-lg border-2 shadow-lg max-w-sm w-full text-center",
+          bgColors[type],
+          isVisible ? "animate-in zoom-in-95" : "animate-out zoom-out-95"
+        )}
+      >
+        <div className="flex flex-col items-center space-y-3">
+          {icons[type]}
+          <p className="text-lg font-medium text-gray-900">{message}</p>
+        </div>
       </div>
-    </header>
+    </div>
   );
 }
