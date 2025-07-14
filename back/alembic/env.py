@@ -15,6 +15,7 @@ FastAPI + SQLAlchemy + Alembic 구성에서 필수적인 브릿지 파일입니�
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
+from configparser import ConfigParser
 
 import os
 import sys
@@ -30,6 +31,10 @@ from app.models.models import Base  # 모델 정의 위치에 따라 조정 가�
 
 # ✅ Alembic의 설정 파일 객체 (.ini 기준)
 config = context.config
+
+# ✅ interpolation 제거한 ConfigParser 수동 주입
+config.file_config = ConfigParser(interpolation=None)
+config.file_config.read(config.config_file_name)
 
 # ✅ 동적으로 sqlalchemy.url을 설정 (alembic.ini의 placeholder를 덮어씀)
 config.set_main_option("sqlalchemy.url", settings.get_db_url())

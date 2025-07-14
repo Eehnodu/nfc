@@ -1,29 +1,29 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import Header from "@/components/Header";
-import AttendanceCard from "@/components/AttendanceCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Users, Clock, TrendingUp, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react"
+import Header from "@/components/Header"
+import AttendanceCard from "@/components/AttendanceCard"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Users, Clock, TrendingUp, AlertCircle } from "lucide-react"
 
 interface AttendanceRecord {
-  id: string;
-  userName: string;
-  status: "present" | "out" | "break" | "absent";
-  checkInTime?: string;
-  checkOutTime?: string;
-  lastActivity: string;
+  id: string
+  userName: string
+  status: "present" | "out" | "break" | "absent"
+  checkInTime?: string
+  checkOutTime?: string
+  lastActivity: string
 }
 
 export default function MainDashboard() {
-  const [attendanceData, setAttendanceData] = useState<AttendanceRecord[]>([]);
+  const [attendanceData, setAttendanceData] = useState<AttendanceRecord[]>([])
   const [stats, setStats] = useState({
     totalEmployees: 0,
     present: 0,
     out: 0,
     absent: 0,
-  });
+  })
 
   useEffect(() => {
     // Mock data - replace with real API call
@@ -55,95 +55,103 @@ export default function MainDashboard() {
         status: "absent",
         lastActivity: "미출근",
       },
-    ];
+      {
+        id: "5",
+        userName: "정수진",
+        status: "present",
+        checkInTime: "08:45",
+        lastActivity: "5분 전",
+      },
+      {
+        id: "6",
+        userName: "최민호",
+        status: "out",
+        checkInTime: "09:15",
+        lastActivity: "14:20 외출",
+      },
+    ]
 
-    setAttendanceData(mockData);
+    setAttendanceData(mockData)
     setStats({
       totalEmployees: mockData.length,
       present: mockData.filter((r) => r.status === "present").length,
       out: mockData.filter((r) => r.status === "out").length,
       absent: mockData.filter((r) => r.status === "absent").length,
-    });
-  }, []);
+    })
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            실시간 근태 현황
-          </h1>
-          <p className="text-gray-600">
-            직원들의 현재 출퇴근 상태를 실시간으로 확인하세요
-          </p>
+      <main className="container mx-auto px-4 py-6 md:py-8 max-w-7xl">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">실시간 근태 현황</h1>
+          <p className="text-sm md:text-base text-gray-600">직원들의 현재 출퇴근 상태를 실시간으로 확인하세요</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">전체 직원</CardTitle>
+              <CardTitle className="text-xs md:text-sm font-medium">전체 직원</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalEmployees}</div>
+              <div className="text-xl md:text-2xl font-bold">{stats.totalEmployees}</div>
+              <p className="text-xs text-muted-foreground mt-1">명</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">근무중</CardTitle>
+              <CardTitle className="text-xs md:text-sm font-medium">근무중</CardTitle>
               <Clock className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">
-                {stats.present}
-              </div>
+              <div className="text-xl md:text-2xl font-bold text-green-600">{stats.present}</div>
+              <p className="text-xs text-muted-foreground mt-1">명</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">외출중</CardTitle>
+              <CardTitle className="text-xs md:text-sm font-medium">외출중</CardTitle>
               <TrendingUp className="h-4 w-4 text-yellow-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-yellow-600">
-                {stats.out}
-              </div>
+              <div className="text-xl md:text-2xl font-bold text-yellow-600">{stats.out}</div>
+              <p className="text-xs text-muted-foreground mt-1">명</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">부재중</CardTitle>
+              <CardTitle className="text-xs md:text-sm font-medium">부재중</CardTitle>
               <AlertCircle className="h-4 w-4 text-red-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">
-                {stats.absent}
-              </div>
+              <div className="text-xl md:text-2xl font-bold text-red-600">{stats.absent}</div>
+              <p className="text-xs text-muted-foreground mt-1">명</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Attendance Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6">
           {attendanceData.map((record) => (
             <AttendanceCard key={record.id} record={record} />
           ))}
         </div>
 
         {/* Real-time indicator */}
-        <div className="mt-8 text-center">
-          <Badge variant="outline" className="text-green-600 border-green-600">
+        <div className="mt-6 md:mt-8 text-center">
+          <Badge variant="outline" className="text-green-600 border-green-600 px-3 py-1">
             <div className="w-2 h-2 bg-green-600 rounded-full mr-2 animate-pulse"></div>
             실시간 업데이트 중
           </Badge>
         </div>
       </main>
     </div>
-  );
+  )
 }

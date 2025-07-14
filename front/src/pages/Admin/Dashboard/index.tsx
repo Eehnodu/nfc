@@ -1,29 +1,29 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Users, Clock, TrendingUp, AlertCircle, RefreshCw } from "lucide-react";
-import AttendanceCard from "@/components/AttendanceCard";
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Users, Clock, TrendingUp, AlertCircle, RefreshCw } from "lucide-react"
+import AttendanceCard from "@/components/AttendanceCard"
 
 interface RealtimeEvent {
-  id: string;
-  userName: string;
-  action: string;
-  timestamp: string;
-  type: "checkin" | "checkout" | "break_out" | "break_in";
+  id: string
+  userName: string
+  action: string
+  timestamp: string
+  type: "checkin" | "checkout" | "break_out" | "break_in"
 }
 
 export default function AdminDashboard() {
-  const [realtimeEvents, setRealtimeEvents] = useState<RealtimeEvent[]>([]);
+  const [realtimeEvents, setRealtimeEvents] = useState<RealtimeEvent[]>([])
   const [stats, setStats] = useState({
     totalEmployees: 25,
     present: 18,
     out: 4,
     absent: 3,
     lateToday: 2,
-  });
+  })
 
   const [attendanceData] = useState([
     {
@@ -53,7 +53,7 @@ export default function AdminDashboard() {
       status: "absent" as const,
       lastActivity: "미출근",
     },
-  ]);
+  ])
 
   useEffect(() => {
     // Mock realtime events
@@ -79,9 +79,9 @@ export default function AdminDashboard() {
         timestamp: "12:10",
         type: "break_out",
       },
-    ];
-    setRealtimeEvents(mockEvents);
-  }, []);
+    ]
+    setRealtimeEvents(mockEvents)
+  }, [])
 
   const getEventBadgeColor = (type: RealtimeEvent["type"]) => {
     const colors = {
@@ -89,117 +89,104 @@ export default function AdminDashboard() {
       checkout: "bg-red-500",
       break_out: "bg-yellow-500",
       break_in: "bg-blue-500",
-    };
-    return colors[type];
-  };
+    }
+    return colors[type]
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">관리자 대시보드</h1>
-          <p className="text-gray-600">실시간 근태 현황을 모니터링하세요</p>
+          <h1 className="text-2xl md:text-3xl font-bold">관리자 대시보드</h1>
+          <p className="text-sm md:text-base text-gray-600">실시간 근태 현황을 모니터링하세요</p>
         </div>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="w-full sm:w-auto bg-transparent">
           <RefreshCw className="w-4 h-4 mr-2" />
           새로고침
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <Card>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">전체 직원</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium">전체 직원</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalEmployees}</div>
+            <div className="text-xl md:text-2xl font-bold">{stats.totalEmployees}</div>
+            <p className="text-xs text-muted-foreground">명</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">근무중</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium">근무중</CardTitle>
             <Clock className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {stats.present}
-            </div>
+            <div className="text-xl md:text-2xl font-bold text-green-600">{stats.present}</div>
+            <p className="text-xs text-muted-foreground">명</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">외출중</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium">외출중</CardTitle>
             <TrendingUp className="h-4 w-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">
-              {stats.out}
-            </div>
+            <div className="text-xl md:text-2xl font-bold text-yellow-600">{stats.out}</div>
+            <p className="text-xs text-muted-foreground">명</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">부재중</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium">부재중</CardTitle>
             <AlertCircle className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">
-              {stats.absent}
-            </div>
+            <div className="text-xl md:text-2xl font-bold text-red-600">{stats.absent}</div>
+            <p className="text-xs text-muted-foreground">명</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow col-span-2 md:col-span-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">오늘 지각</CardTitle>
+            <CardTitle className="text-xs md:text-sm font-medium">오늘 지각</CardTitle>
             <AlertCircle className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">
-              {stats.lateToday}
-            </div>
+            <div className="text-xl md:text-2xl font-bold text-orange-600">{stats.lateToday}</div>
+            <p className="text-xs text-muted-foreground">회</p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Real-time Events */}
-        <Card className="lg:col-span-1">
+        <Card className="xl:col-span-1">
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex items-center justify-between text-base md:text-lg">
               <span>실시간 이벤트</span>
-              <Badge
-                variant="outline"
-                className="text-green-600 border-green-600"
-              >
+              <Badge variant="outline" className="text-green-600 border-green-600">
                 <div className="w-2 h-2 bg-green-600 rounded-full mr-2 animate-pulse"></div>
                 LIVE
               </Badge>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3 max-h-96 overflow-y-auto">
+            <div className="space-y-3 max-h-80 md:max-h-96 overflow-y-auto">
               {realtimeEvents.map((event) => (
-                <div
-                  key={event.id}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                >
+                <div key={event.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div>
                     <div className="font-medium text-sm">{event.userName}</div>
                     <div className="text-xs text-gray-600">{event.action}</div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-medium">{event.timestamp}</div>
-                    <Badge
-                      className={`${getEventBadgeColor(event.type)} text-white text-xs`}
-                    >
-                      {event.action}
-                    </Badge>
+                    <Badge className={`${getEventBadgeColor(event.type)} text-white text-xs`}>{event.action}</Badge>
                   </div>
                 </div>
               ))}
@@ -208,10 +195,10 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Current Attendance Status */}
-        <div className="lg:col-span-2">
+        <div className="xl:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>현재 출근 현황</CardTitle>
+              <CardTitle className="text-base md:text-lg">현재 출근 현황</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -224,5 +211,5 @@ export default function AdminDashboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }

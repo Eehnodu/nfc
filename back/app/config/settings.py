@@ -17,6 +17,7 @@ settings.py
 from pydantic_settings import BaseSettings
 import os
 import socket
+from urllib.parse import quote_plus
 
 # 환경설정 클래스 (BaseSettings 상속 → .env에서 값 자동 로드)
 class Settings(BaseSettings):
@@ -51,22 +52,23 @@ class Settings(BaseSettings):
         - 로컬 PC나 라즈베리파이 환경이면 "local"
         - 그 외 서버/운영 환경이면 "prod"로 간주
         """
-        hostname = socket.gethostname()
-        return "local" if "DESKTOP" in hostname or "raspberry" in hostname else "prod"
+        hostname = socket.gethostname().lower()
+        local_keywords = ['desktop', 'laptop', 'udong', 'wsl', 'local', 'dev', 'win']
+        return 'local' if any(k in hostname for k in local_keywords) else 'prod'
 
     def get_db_url(self) -> str:
         """
         현재 환경(local 또는 prod)에 따라 SQLAlchemy DB 연결 URL을 반환하는 함수.
         """
         if self.env == "prod":
-            # 운영용 DB URL 구성
+            pw = quote_plus(self.prod_mysql_password)
             return (
-                f"mysql+pymysql://{self.prod_mysql_user}:{self.prod_mysql_password}"
+                f"mysql+pymysql://{self.prod_mysql_user}:{pw}"
                 f"@{self.prod_mysql_host}:{self.mysql_port}/{self.prod_mysql_db}"
             )
-        # 로컬용 DB URL 구성
+        pw = quote_plus(self.local_mysql_password)
         return (
-            f"mysql+pymysql://{self.local_mysql_user}:{self.local_mysql_password}"
+            f"mysql+pymysql://{self.local_mysql_user}:{pw}"
             f"@{self.local_mysql_host}:{self.mysql_port}/{self.local_mysql_db}"
         )
 

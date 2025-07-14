@@ -1,18 +1,11 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
   Dialog,
   DialogContent,
@@ -20,19 +13,19 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Plus, Edit, Trash2, Search, Smartphone } from "lucide-react";
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Plus, Edit, Trash2, Search, Smartphone } from "lucide-react"
 
 interface Employee {
-  id: string;
-  name: string;
-  department: string;
-  position: string;
-  email: string;
-  nfcId?: string;
-  status: "active" | "inactive";
-  joinDate: string;
+  id: string
+  name: string
+  department: string
+  position: string
+  email: string
+  nfcId?: string
+  status: "active" | "inactive"
+  joinDate: string
 }
 
 export default function EmployeeManage() {
@@ -66,49 +59,45 @@ export default function EmployeeManage() {
       status: "inactive",
       joinDate: "2022-11-10",
     },
-  ]);
+  ])
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [searchTerm, setSearchTerm] = useState("")
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null)
 
   const filteredEmployees = employees.filter(
     (emp) =>
       emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       emp.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      emp.email.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
 
   const handleAddEmployee = () => {
-    setEditingEmployee(null);
-    setIsDialogOpen(true);
-  };
+    setEditingEmployee(null)
+    setIsDialogOpen(true)
+  }
 
   const handleEditEmployee = (employee: Employee) => {
-    setEditingEmployee(employee);
-    setIsDialogOpen(true);
-  };
+    setEditingEmployee(employee)
+    setIsDialogOpen(true)
+  }
 
   const handleDeleteEmployee = (id: string) => {
-    setEmployees((prev) => prev.filter((emp) => emp.id !== id));
-  };
+    setEmployees((prev) => prev.filter((emp) => emp.id !== id))
+  }
 
   const getStatusBadge = (status: Employee["status"]) => {
-    return status === "active" ? (
-      <Badge variant="default">활성</Badge>
-    ) : (
-      <Badge variant="secondary">비활성</Badge>
-    );
-  };
+    return status === "active" ? <Badge variant="default">활성</Badge> : <Badge variant="secondary">비활성</Badge>
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">직원 관리</h1>
-          <p className="text-gray-600">직원 정보와 NFC 태그를 관리하세요</p>
+          <h1 className="text-2xl md:text-3xl font-bold">직원 관리</h1>
+          <p className="text-sm md:text-base text-gray-600">직원 정보와 NFC 태그를 관리하세요</p>
         </div>
-        <Button onClick={handleAddEmployee}>
+        <Button onClick={handleAddEmployee} className="w-full sm:w-auto">
           <Plus className="w-4 h-4 mr-2" />
           직원 추가
         </Button>
@@ -132,116 +121,87 @@ export default function EmployeeManage() {
       {/* Employees Table */}
       <Card>
         <CardHeader>
-          <CardTitle>직원 목록 ({filteredEmployees.length}명)</CardTitle>
+          <CardTitle className="text-base md:text-lg">직원 목록 ({filteredEmployees.length}명)</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>이름</TableHead>
-                <TableHead>부서</TableHead>
-                <TableHead>직책</TableHead>
-                <TableHead>이메일</TableHead>
-                <TableHead>NFC ID</TableHead>
-                <TableHead>상태</TableHead>
-                <TableHead>입사일</TableHead>
-                <TableHead>작업</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredEmployees.map((employee) => (
-                <TableRow key={employee.id}>
-                  <TableCell className="font-medium">{employee.name}</TableCell>
-                  <TableCell>{employee.department}</TableCell>
-                  <TableCell>{employee.position}</TableCell>
-                  <TableCell>{employee.email}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <Smartphone className="w-4 h-4 text-gray-500" />
-                      <span className="font-mono text-sm">
-                        {employee.nfcId || "미등록"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>{getStatusBadge(employee.status)}</TableCell>
-                  <TableCell>{employee.joinDate}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEditEmployee(employee)}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteEmployee(employee.id)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[80px]">이름</TableHead>
+                  <TableHead className="min-w-[80px]">부서</TableHead>
+                  <TableHead className="min-w-[100px]">직책</TableHead>
+                  <TableHead className="min-w-[150px]">이메일</TableHead>
+                  <TableHead className="min-w-[100px]">NFC ID</TableHead>
+                  <TableHead className="min-w-[80px]">상태</TableHead>
+                  <TableHead className="min-w-[100px]">입사일</TableHead>
+                  <TableHead className="min-w-[100px]">작업</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredEmployees.map((employee) => (
+                  <TableRow key={employee.id}>
+                    <TableCell className="font-medium">{employee.name}</TableCell>
+                    <TableCell>{employee.department}</TableCell>
+                    <TableCell>{employee.position}</TableCell>
+                    <TableCell className="max-w-[150px] truncate">{employee.email}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <Smartphone className="w-4 h-4 text-gray-500" />
+                        <span className="font-mono text-sm">{employee.nfcId || "미등록"}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>{getStatusBadge(employee.status)}</TableCell>
+                    <TableCell>{employee.joinDate}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <Button variant="outline" size="sm" onClick={() => handleEditEmployee(employee)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleDeleteEmployee(employee.id)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
       {/* Add/Edit Employee Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] mx-4">
           <DialogHeader>
-            <DialogTitle>
-              {editingEmployee ? "직원 정보 수정" : "새 직원 추가"}
-            </DialogTitle>
-            <DialogDescription>
-              직원의 기본 정보와 NFC 태그를 설정하세요.
-            </DialogDescription>
+            <DialogTitle>{editingEmployee ? "직원 정보 수정" : "새 직원 추가"}</DialogTitle>
+            <DialogDescription>직원의 기본 정보와 NFC 태그를 설정하세요.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
                 이름
               </Label>
-              <Input
-                id="name"
-                defaultValue={editingEmployee?.name || ""}
-                className="col-span-3"
-              />
+              <Input id="name" defaultValue={editingEmployee?.name || ""} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="department" className="text-right">
                 부서
               </Label>
-              <Input
-                id="department"
-                defaultValue={editingEmployee?.department || ""}
-                className="col-span-3"
-              />
+              <Input id="department" defaultValue={editingEmployee?.department || ""} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="position" className="text-right">
                 직책
               </Label>
-              <Input
-                id="position"
-                defaultValue={editingEmployee?.position || ""}
-                className="col-span-3"
-              />
+              <Input id="position" defaultValue={editingEmployee?.position || ""} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
                 이메일
               </Label>
-              <Input
-                id="email"
-                type="email"
-                defaultValue={editingEmployee?.email || ""}
-                className="col-span-3"
-              />
+              <Input id="email" type="email" defaultValue={editingEmployee?.email || ""} className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="nfcId" className="text-right">
@@ -256,10 +216,12 @@ export default function EmployeeManage() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">{editingEmployee ? "수정" : "추가"}</Button>
+            <Button type="submit" className="w-full sm:w-auto">
+              {editingEmployee ? "수정" : "추가"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }
