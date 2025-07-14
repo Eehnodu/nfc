@@ -77,11 +77,17 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border select-none;
   }
   body {
     @apply bg-background text-foreground;
   }
+}
+
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 /* Custom animations for NFC feedback */

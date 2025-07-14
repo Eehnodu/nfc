@@ -63,6 +63,17 @@ export default function AdminSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
+        {/* 사용자 이름 + 로그아웃 */}
+        <div className="px-4 py-3 flex items-center justify-between text-base border-bold">
+          <span className="font-medium text-gray-700">관리자</span>
+          <button
+            onClick={logout}
+            className="text-sm text-red-500 hover:underline"
+          >
+            로그아웃
+          </button>
+        </div>
+
         <SidebarGroup>
           <SidebarGroupLabel>관리자 메뉴</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -84,6 +95,7 @@ export default function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
