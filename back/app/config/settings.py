@@ -49,12 +49,13 @@ class Settings(BaseSettings):
         """
         현재 실행 환경을 자동으로 판별하는 속성.
 
-        - 로컬 PC나 라즈베리파이 환경이면 "local"
-        - 그 외 서버/운영 환경이면 "prod"로 간주
+        - AWS EC2 또는 서버 환경이면 "prod"
+        - 그 외는 "local"
         """
         hostname = socket.gethostname().lower()
-        local_keywords = ['desktop', 'laptop', 'udong', 'wsl', 'local', 'dev', 'win']
-        return 'local' if any(k in hostname for k in local_keywords) else 'prod'
+        if hostname.startswith("ip-") or "ec2" in hostname:
+            return "prod"
+        return "local"
 
     def get_db_url(self) -> str:
         """
