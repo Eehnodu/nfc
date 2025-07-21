@@ -15,24 +15,40 @@ Alembic 등의 마이그레이션 도구에서도 자동으로 인식됩니다.
 """
 
 from app.database import Base
-from sqlalchemy import Column, Integer, String, DateTime
-import datetime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from datetime import datetime
 
 # 출결 로그를 저장하는 테이블
 class AttendanceLog(Base):
-    __tablename__ = "attendance_logs"  # 실제 DB에 생성될 테이블 이름
+    __tablename__ = "tb_attendance_logs"  # 실제 DB에 생성될 테이블 이름
 
     id = Column(Integer, primary_key=True, index=True)  # 고유 ID
     user_id = Column(Integer, nullable=False)           # 출결 대상 사용자 ID
     status = Column(String(50), nullable=False)         # 출근/퇴근 상태값
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)  # 기록 시각
+    timestamp = Column(DateTime, default=datetime.utcnow)  # 기록 시각
 
 # 사용자 정보를 저장하는 테이블
 class User(Base):
-    __tablename__ = "users"  # 실제 DB에 생성될 테이블 이름
+    __tablename__ = "tb_users"  # 실제 DB에 생성될 테이블 이름
 
     id = Column(Integer, primary_key=True, index=True)           # 사용자 고유 ID
     username = Column(String(100), unique=True, nullable=False)  # 사용자 이름
     email = Column(String(100), unique=True, nullable=False)     # 이메일 주소
     phone = Column(String(100), unique=True, nullable=False)     # 전화번호
     created_at = Column(DateTime, default=datetime.utcnow)       # 생성 시간 (기본값: 현재 시간)
+    
+class UserRefreshToken(Base):
+    __tablename__ = "tb_user_refresh_tokens"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("tb_users.id"), nullable=False)
+    refresh_token = Column(String(512), unique=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    expired_at = Column(DateTime)
+    
+class TokenBlacklist(Base):
+    __tablename__ = "tb_token_blacklist"
+
+    id = Column(Integer, primary_key=True)
+    token = Column(String(512), unique=True, nullable=False)
+    revoked_at = Column(DateTime, default=datetime.utcnow)

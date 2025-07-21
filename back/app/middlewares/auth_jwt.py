@@ -1,11 +1,11 @@
 from jose import JWTError, jwt
 from fastapi import Request, HTTPException, Depends
 from datetime import datetime, timedelta
-from config.settings import settings
+from app.config import settings
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
-SECRET_KEY = settings.secret_key
+SECRET_KEY = settings.settings.secret_key
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()

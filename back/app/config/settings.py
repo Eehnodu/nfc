@@ -40,6 +40,9 @@ class Settings(BaseSettings):
     prod_mysql_host: str               # 운영 DB 호스트 (예: RDS, 외부 서버 등)
     prod_mysql_db: str                 # 운영 DB 이름
 
+    # 시크릿 키 (세션 쿠키 서명 등 보안 기능에 사용됨. 반드시 노출 금지!)
+    secret_key: str
+
     # 환경 변수 파일 경로 설정 (.env 파일에서 값을 불러옴)
     class Config:
         env_file = ".env"

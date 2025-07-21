@@ -14,9 +14,8 @@ FastAPI 앱 진입점 (main.py)
 """
 
 from fastapi import FastAPI
-from back.app.routers import base
 from app.config.settings import settings
-from app.routers import auth, protected
+from app.routers import auth
 from app.middlewares import cors, secure_headers, session, https_redirect, access_log, rate_limiter
 from app.database import engine, Base
 import app.models  # 모델 자동 인식용 import
@@ -47,10 +46,7 @@ def create_app() -> FastAPI:
     
     # ✅ . JWT 기반 인증 라우터 등록
     app.include_router(auth.router, prefix=settings.API_PREFIX)       # 로그인 엔드포인트
-    app.include_router(protected.router, prefix=settings.API_PREFIX)  # 보호된 API
-
-    # 샘플 라우터 등록
-    app.include_router(base.router, prefix=settings.API_PREFIX)
+    # app.include_router(protected.router, prefix=settings.API_PREFIX)  # 보호된 API
 
     # 로컬 환경에서만 DB 테이블 자동 생성
     if settings.env == "local":

@@ -8,14 +8,11 @@ from fastapi import Request, FastAPI
 limiter = Limiter(key_func=get_remote_address)
 
 def add_rate_limiter(app: FastAPI):
-    app.state.limiter = limiter
+    app.state.limiter = limiter  # 이건 그대로
 
     @app.exception_handler(RateLimitExceeded)
     async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
         return JSONResponse(
             status_code=429,
-            content={"detail": "Rate limit exceeded"},
+            content={"detail": "Rate limit exceeded"}
         )
-
-    # 미들웨어 등록
-    limiter.init_app(app)
