@@ -35,3 +35,4 @@ class User(Base):
     username = Column(String(100), unique=True, nullable=False)  # 사용자 이름
     email = Column(String(100), unique=True, nullable=False)     # 이메일 주소
     phone = Column(String(100), unique=True, nullable=False)     # 전화번호
+    created_at = Column(DateTime, default=datetime.utcnow)       # 생성 시간 (기본값: 현재 시간)

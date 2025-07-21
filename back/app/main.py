@@ -16,6 +16,7 @@ FastAPI 앱 진입점 (main.py)
 from fastapi import FastAPI
 from back.app.routers import base
 from app.config.settings import settings
+from app.routers import auth, protected
 from app.middlewares import cors, secure_headers, session, https_redirect, access_log, rate_limiter
 from app.database import engine, Base
 import app.models  # 모델 자동 인식용 import
@@ -44,13 +45,17 @@ def create_app() -> FastAPI:
     # 6. Rate Limiting 설정 (라우터 단위에서 @limiter.limit 데코레이터로 적용)
     rate_limiter.add_rate_limiter(app)
     
-    # 로컬 환경에서만 DB 테이블 자동 생성
-    if settings.env == "local":
-        Base.metadata.create_all(bind=engine)
+    # ✅ . JWT 기반 인증 라우터 등록
+    app.include_router(auth.router, prefix=settings.API_PREFIX)       # 로그인 엔드포인트
+    app.include_router(protected.router, prefix=settings.API_PREFIX)  # 보호된 API
 
     # 샘플 라우터 등록
     app.include_router(base.router, prefix=settings.API_PREFIX)
 
+    # 로컬 환경에서만 DB 테이블 자동 생성
+    if settings.env == "local":
+        Base.metadata.create_all(bind=engine)
+        
     return app
 
 # 앱 인스턴스 실행을 위한 전역 객체

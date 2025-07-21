@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from config.settings import settings
 
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 SECRET_KEY = settings.secret_key
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
